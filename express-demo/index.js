@@ -1,3 +1,6 @@
+const startupDebugger=require('debug')('app:startup')//debugger
+const dbDebugger=require('debug')('app:db')
+const config=require('config');
 const express = require('express')
 const Joi = require('joi')
 const app = express()
@@ -13,11 +16,35 @@ app.use(function(req,res,next){
 	console.log('Logging')
 	next();
 })
-
+//environment variable
+// console.log(`NODE_ENV ${process.env.NODE_ENV}`) //undefined
+// console.log(`app: ${app.get('env')}`)
 app.use(auth)
 app.use(express.static('public'))
+
+//if dev env then enable morgan otherwise dont
 app.use(helmet())
-app.use(morgan('tiny'))
+
+//Configuration
+console.log(`App name: ${config.get('name')}`)
+console.log(`Mail Server: ${config.get('mail.host')}`)
+console.log(`Mail password: ${config.get('mail.password')}`)
+
+
+
+
+
+
+
+
+if (app.get('env')==='development'){
+	app.use(morgan('tiny'))
+	startupDebugger('Morgan enabled')
+}
+
+//db work
+dbDebugger('Coonnected to the database')
+
 
 app.use(logger)
 
