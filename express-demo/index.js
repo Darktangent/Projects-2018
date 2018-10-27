@@ -1,9 +1,27 @@
 const express = require('express')
 const Joi = require('joi')
 const app = express()
+const logger= require('./logger')
+const auth=require('./auth')
+const helmet=require('helmet')
+const morgan=require('morgan')
 
 // -4 test
 app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+app.use(function(req,res,next){
+	console.log('Logging')
+	next();
+})
+
+app.use(auth)
+app.use(express.static('public'))
+app.use(helmet())
+app.use(morgan('tiny'))
+
+app.use(logger)
+
+
 const courses = [{
 		id: 1,
 		name: "courses 1"
@@ -17,6 +35,9 @@ const courses = [{
 		name: 'courses 3 '
 	}
 ]
+
+
+
 app.get('/', (req, res) => {
 	res.send('Hello there!!!')
 })
