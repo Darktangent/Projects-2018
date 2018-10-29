@@ -6,11 +6,29 @@ console.log('before')
 //     })
 // })
 console.log('after')
-const p=getUser(1)
-p.then(user=> getRepo(user.gitHubUsername))
-.then(repos=>getCommits(repos[0]))
-.then(commits=>console.log(commits))
-.catch(err=>console.log(err.message))
+// const p=getUser(1)
+// p.then(user=> getRepo(user.gitHubUsername))
+// .then(repos=>getCommits(repos[0]))
+// .then(commits=>console.log(commits))
+// .catch(err=>console.log(err.message))
+
+//Async and Await
+
+async function displayCommits (){
+    try{
+        const user=await getUser(1)
+        const repos= await getRepo(user.gitHubUsername)
+        const commits= await getCommits(repos[0])
+        console.log(commits)
+    } catch(err){
+        console.log('Error',err.message)
+    }
+    
+
+
+}
+displayCommits()
+
 
 
 
@@ -43,7 +61,7 @@ function getCommits(repo){
     return new Promise((resolve,reject)=>{
         setTimeout(()=>{
             console.log('Calling Api to get commits')
-            resolve('commits')
+            resolve(['commits','commit 1'])
         },2000)
     })
 }
